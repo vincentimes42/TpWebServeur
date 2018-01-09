@@ -14,6 +14,5 @@
 				<li>${list.titre}  |  ${list.getDescrip()}</li>
 			</#list>
 		</ul>
-	
 	</body>
 </html>
