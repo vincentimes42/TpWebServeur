@@ -12,6 +12,5 @@
 				<li>${element.dateCrea}  |  ${element.getDateModif()?date}  |  ${element.titre}  |  ${element.getDescrip()}</li>
 			</#list>
 		</ul>
-	
 	</body>
 </html>
