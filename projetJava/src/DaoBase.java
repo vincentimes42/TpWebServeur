@@ -1,3 +1,5 @@
+package WebServer;
+
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -127,14 +129,14 @@ public class DaoBase {
 		  }
 	}
 	
-	public static List<Element> getListsByID(String id){
+	public static List<Liste> getListsByID(String id){
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
 		        "SELECT * FROM LISTE WHERE ID= :idlist";
 		    return con.createQuery(query)
 		    		.addParameter("idlist",id)
-		    		.executeAndFetch(Element.class);
+		    		.executeAndFetch(Liste.class);
 		  }
 	}
 	
