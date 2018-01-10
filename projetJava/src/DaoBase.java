@@ -21,7 +21,7 @@ public class DaoBase {
 		}
 	}
 	
-	public void insertElement(Element element, Liste liste){ // modif param de idliste à liste
+	public void insertElement(Element element, Liste liste){ // modif param de idliste Ã  liste
 		final String insertQuery="INSERT INTO ELEMENT(ID,TITRE,DESCRIPTION,DATECREA,DATEMODIF) "+ "VALUES(:ID, :TITRE, :DESCRIPTION, :DATECREA, :DATEMODIF)";
 		final String insertQuery2="INSERT INTO ASSOCIATION(IDLISTE,IDELEM) "+ "VALUES(:IDLISTE,:IDELEM)";
 		try(Connection connect = sql2o.beginTransaction()){
@@ -48,7 +48,7 @@ public class DaoBase {
 			 connect.createQuery(insertQuery)
 		        .addParameter("TITRE", element.getTitre())
 		        .addParameter("DESCRIPTION", element.getDescrip())		        
-		        .addParameter("DATEMODIF", new Date())		//problème on fait une modification sans passer par setTitre et setDescripton donc DateModif est pas changée        
+		        .addParameter("DATEMODIF", new Date())		//problÃ¨me on fait une modification sans passer par setTitre et setDescripton donc DateModif est pas changÃ©e        
 		        .addParameter("ID", element.getId())
 		        .executeUpdate();
 			 connect.commit();
@@ -127,13 +127,13 @@ public class DaoBase {
 		  }
 	}
 	
-	public static List<Element> getListsByID(Liste liste){
+	public static List<Element> getListsByID(String id){
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
 		        "SELECT * FROM LISTE WHERE ID= :idlist";
 		    return con.createQuery(query)
-		    		.addParameter("idlist",liste.getId())
+		    		.addParameter("idlist",id)
 		    		.executeAndFetch(Element.class);
 		  }
 	}
@@ -194,7 +194,7 @@ public class DaoBase {
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
-		        "SELECT  * FROM ELEMENT"; // *  à la place des champs ?
+		        "SELECT  * FROM ELEMENT"; // *  Ã  la place des champs ?
 
 		    return con.createQuery(query)
 		        .executeAndFetch(Element.class);
@@ -235,13 +235,13 @@ public class DaoBase {
 		  }
 	}
 	
-	public static List<Element> getElementsByID(Element element){
+	public static List<Element> getElementsByID(String id){
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
 		        "SELECT * FROM ELEMENT WHERE ID= :idelem";
 		    return con.createQuery(query)
-		    		.addParameter("idelem",element.getId())
+		    		.addParameter("idelem",id)
 		    		.executeAndFetch(Element.class);
 		  }
 	}
