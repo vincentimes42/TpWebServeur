@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -68,7 +67,6 @@ public class DaoBase {
 		}
 	}
 	
-	
 	public void supprElementDansListe(Element element,Liste liste) {
 		final String insertQuery="DELETE  FROM ASSOCIATION WHERE IDELEM=:idelem AND IDLIST=: idlist;";
 		try(Connection connect = sql2o.beginTransaction()){
@@ -81,7 +79,6 @@ public class DaoBase {
 		if (elementSansListe(element)) supprElement(element)  ;
 		
 	}
-	
 	
 	public void supprElement(Element element){
 		final String insertQuery="DELETE FROM ELEMENT WHERE ID=:ID;";
@@ -118,6 +115,7 @@ public class DaoBase {
 		}
 		
 	}
+	
 	public static List<Liste> getAllLists(){
 		
 		try (Connection con = sql2o.open()) {
@@ -126,6 +124,17 @@ public class DaoBase {
 
 		    return con.createQuery(query)
 		        .executeAndFetch(Liste.class);
+		  }
+	}
+	
+	public static List<Element> getListsByID(Liste liste){
+		
+		try (Connection con = sql2o.open()) {
+		    final String query =
+		        "SELECT * FROM LISTE WHERE ID= :idlist";
+		    return con.createQuery(query)
+		    		.addParameter("idlist",liste.getId())
+		    		.executeAndFetch(Element.class);
 		  }
 	}
 	
@@ -153,22 +162,6 @@ public class DaoBase {
 		  }
 	}
 	
-	
-	
-	/*
-	public static List<Liste> getElementsPerList(Liste list){ // modifier pour ASSOCIATION VIELLE VERSION
-		
-		try (Connection con = sql2o.open()) {
-		    final String query =
-		        "SELECT * FROM ELEMENT WHERE IDLISTE = :idliste"; 
-
-		    return con.createQuery(query)
-	    		.addParameter("idliste", list.getId())
-		        .executeAndFetch(Liste.class);
-		  }
-	}
-	*/
-	
 	public static List<Element> getElementsPerList(Liste list){ 
 		
 		try (Connection con = sql2o.open()) {
@@ -189,7 +182,7 @@ public class DaoBase {
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
-		        "SELECT * FROM LIST WHERE ID IN(SELECT IDLIST FROM ASSOCIATION WHERE IDELEM =:idelem)";
+		        "SELECT * FROM LISTE WHERE ID IN(SELECT IDLISTE FROM ASSOCIATION WHERE IDELEM =:idelem)";
 		    		
 		    return con.createQuery(query)
 	    		.addParameter("idelem", element.getId())
@@ -242,7 +235,7 @@ public class DaoBase {
 		  }
 	}
 	
-public static List<Element> getElementsByID(Element element){
+	public static List<Element> getElementsByID(Element element){
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
