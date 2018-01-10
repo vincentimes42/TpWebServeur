@@ -248,4 +248,15 @@ public class DaoBase {
 		  }
 	}
 	
+	public static List<Element> getElementsByDescription(String description){
+		
+		try (Connection con = sql2o.open()) {
+		    final String query =
+		        "SELECT * FROM ELEMENT WHERE DESCRIPTION = :description";
+
+		    return con.createQuery(query)
+		    		.addParameter("description", description)
+		    		.executeAndFetch(Element.class);
+		  }
+	}
 }
