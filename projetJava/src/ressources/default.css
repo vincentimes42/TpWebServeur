@@ -1,0 +1,111 @@
+body
+{
+	font-family: Helvetica, serif;
+	text-align: justify;
+	text-align: center;
+	background-image: url("background.jpg");
+	background-repeat: repeat;
+	background-position: top;
+}
+
+header
+{
+	background-image: url("Star-Wars-Banniere.png"); 
+	background-repeat: no-repeat;
+    	background-position: center;
+	text-align: center;
+	height: 400px;
+}
+
+h1
+{
+	font-size: 200%;
+	font-weight: bold;
+	text-align: center;
+	color: WHITE;
+	text-shadow: 2px 2px 2px rgb(255, 204, 0);
+	margin-bottom: 2em;
+	margin-top: 1em;
+}
+
+aside
+{	float:left;
+}
+
+label
+{	color: white;
+	width: auto;
+	margin-bottom: 1em;
+	display: block;
+	width: 200px;
+	
+}
+
+input
+{	
+	
+	background-color: rgba(255, 255, 255, 0.5);
+	border-top-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	text-indent: 0;
+}
+
+
+section
+{
+display: inline-block;
+}
+ul
+{	
+	width: auto
+ 	margin: 20px auto;
+ 	padding: 1em;
+  	border-width: 10px;
+	border-radius: 10px;
+	border: 2px solid grey;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+
+/* BOUTONS */
+
+
+button
+{
+	
+	border-radius: 10px;
+	width: auto;
+	border: 2px solid white;
+	margin-bottom: 10px;
+	background: silver; 
+	-webkit-transition: 1s;
+	-moz-transition: 1s;
+	transition: 1s;
+}
+
+button:hover
+{
+	box-shadow: 0px 0px 10px #09e; /* red */
+	border: 2px solid yellow;
+	-webkit-transition: 0.5s;
+	-moz-transition: 0.5s;
+	transition: 0.5s;
+}
+
+
+
+/* FIGURES */
+figure img
+{
+	width: 75%;
+    margin-left: 11%;
+}
+
+figure figcaption
+{
+	text-align: center;
+}
+
+
+
+
