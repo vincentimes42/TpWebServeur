@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +15,6 @@ public class Liste {
 	//constructeur
 	public Liste(){
 		this.id= UUID.randomUUID().toString();
-		this.liste= new ArrayList<Element>();
 		this.titre= "" ;
 		this.description= "";
 	}
@@ -87,7 +86,5 @@ public class Liste {
 		return this.description;
 	}
 	
-	public List<Element> getList(){
-		return this.liste;
-	}	
+		
 }
