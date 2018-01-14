@@ -1,5 +1,6 @@
 package projet;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,7 +30,7 @@ public class DaoBase {
 	
 	*/
  	public static  boolean verifCaract(String str ) {
-		return str.matches("[a-zA-Z_0-9-]*");
+		return str.matches("[a-zA-Z_0-9-]+");
 	}
 	
  	public void EffacerTout(){
@@ -56,25 +57,24 @@ public class DaoBase {
 		}
 	}
 	
-	public void insert(Liste listeInsert, Liste listeRecept){ // modif param de idliste à liste
+	public void insert(Liste listeInsert, Liste listeRecept){ 
 		if (verifCaract(listeInsert.getTitre() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre");
 		if (verifCaract(listeInsert.getDescrip() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le tritre");
 		if (verifCaract(listeRecept.getTitre() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre de la liste");
 		if (verifCaract(listeRecept.getDescrip() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans description liste");
 		if (listeRecept.getId()==listeInsert.getId()) throw new IllegalArgumentException("Même Id pour les deux listes");
 		
-		final String insertQuery="INSERT INTO LISTE(ID,TITRE,DESCRIPTION) "+ "VALUES(:ID, :TITRE, :DESCRIPTION) "+ "VALUES(:ID, :TITRE, :DESCRIPTION)";
-		final String insertQuery2="INSERT INTO ASSOCIATION(IDLISTE,IDELEM) "+ "VALUES(:IDLISTE,:IDELEM)" + "VALUES(:TYPE,:type)";
+		final String insertQuery="INSERT INTO LISTE(ID,TITRE,DESCRIPTION) "+ "VALUES(:ID, :TITRE, :DESCRIPTION) ";
+		final String insertQuery2="INSERT INTO ASSOCIATION(IDLISTE,IDELEM,TYPE) "+ "VALUES(:IDLISTE,:IDELEM,:type)";
 		try(Connection connect = sql2o.beginTransaction()){
 			 connect.createQuery(insertQuery)
 		        .addParameter("ID", listeInsert.getId())
 		        .addParameter("TITRE", listeInsert.getTitre())
 		        .addParameter("DESCRIPTION", listeInsert.getDescrip())		        
-		        		        
 		        .executeUpdate();
 			 connect.createQuery(insertQuery2)  //ajout du lien dans la table Association
 		        .addParameter("IDLISTE", listeRecept.getId())
-		        .addParameter("IDELEM", listeRecept.getId())
+		        .addParameter("IDELEM", listeInsert.getId())
 		        .addParameter("type", 0)
 		        .executeUpdate();
 			 connect.commit();
@@ -82,28 +82,42 @@ public class DaoBase {
 	}
 	
 	
-	public void insert(Element element, Liste liste){ // modif param de idliste à liste
+	public void insert(Element element, Liste liste){ //modifier pour vérifier avant insertion dans la table Element si l'element y est
 		if (verifCaract(element.getTitre() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre");
 		if (verifCaract(element.getDescrip() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le tritre");
 		if (verifCaract(liste.getTitre() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre de la liste");
 		if (verifCaract(liste.getDescrip() )== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans description liste");
 		
-		final String insertQuery="INSERT INTO ELEMENT(ID,DATECREA,DATEMODIF,TITRE,DESCRIPTION) "+ "VALUES(:ID, :DATECREA, :DATEMODIF, :TITRE, :DESCRIPTION)";
-		final String insertQuery2="INSERT INTO ASSOCIATION(IDLISTE,IDELEM,TYPE) "+ "VALUES(:IDLISTE,:IDELEM,:type)";
-		try(Connection connect = sql2o.beginTransaction()){
-			 connect.createQuery(insertQuery)
-		        .addParameter("ID", element.getId())
-		        .addParameter("TITRE", element.getTitre())
-		        .addParameter("DESCRIPTION", element.getDescrip())		        
-		        .addParameter("DATECREA", element.getDateCrea())		        
-		        .addParameter("DATEMODIF", element.getDateModif())		        
-		        .executeUpdate();
-			 connect.createQuery(insertQuery2)  //ajout du lien dans la table Association
-		        .addParameter("IDLISTE", liste.getId())
-		        .addParameter("IDELEM", element.getId())
-		        .addParameter("type", 1)
-		        .executeUpdate();
-			 connect.commit();
+		if(getElementsByID(element.getId()).size()==0) { //si l'element n'est pas dans la table ELEMENT on l'ajoute et on met le lien sinon on met juste le lien
+			final String insertQuery="INSERT INTO ELEMENT(ID,DATECREA,DATEMODIF,TITRE,DESCRIPTION) "+ "VALUES(:ID, :DATECREA, :DATEMODIF, :TITRE, :DESCRIPTION)";
+			final String insertQuery2="INSERT INTO ASSOCIATION(IDLISTE,IDELEM,TYPE) "+ "VALUES(:IDLISTE,:IDELEM,:type)";
+			try(Connection connect = sql2o.beginTransaction()){
+				 connect.createQuery(insertQuery)
+			        .addParameter("ID", element.getId())
+			        .addParameter("TITRE", element.getTitre())
+			        .addParameter("DESCRIPTION", element.getDescrip())		        
+			        .addParameter("DATECREA", element.getDateCrea())		        
+			        .addParameter("DATEMODIF", element.getDateModif())		        
+			        .executeUpdate();
+				 connect.createQuery(insertQuery2)  //ajout du lien dans la table Association
+			        .addParameter("IDLISTE", liste.getId())
+			        .addParameter("IDELEM", element.getId())
+			        .addParameter("type", 1)
+			        .executeUpdate();
+				 connect.commit();
+			}
+		}
+		else {
+			final String insertQuery2="INSERT INTO ASSOCIATION(IDLISTE,IDELEM,TYPE) "+ "VALUES(:IDLISTE,:IDELEM,:type)";
+			try(Connection connect = sql2o.beginTransaction()){
+				 connect.createQuery(insertQuery2)  //ajout du lien dans la table Association
+			        .addParameter("IDLISTE", liste.getId())
+			        .addParameter("IDELEM", element.getId())
+			        .addParameter("type", 1)
+			        .executeUpdate();
+				 connect.commit();
+			}
+		
 		
 		}
 		
@@ -232,7 +246,7 @@ public class DaoBase {
 	}
 	
 	
-	public static List<Liste> getAllLists(){
+	public  List<Liste> getAllLists(){
 		
 		try (Connection con = sql2o.open()) {
 		    final String query =
@@ -244,8 +258,9 @@ public class DaoBase {
 	}
 
 	public  List<Liste> getListsByTitre(String titre){
-		if (verifCaract(titre)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre ");;
-		
+		if (titre=="") return getAllLists();
+		else if (verifCaract(titre)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre ");
+		else {
 		try (Connection con = sql2o.open()) {
 		    final String query =
 		        "SELECT * FROM LISTE WHERE TITRE = :titre";
@@ -254,12 +269,13 @@ public class DaoBase {
 		    		.addParameter("titre", titre)
 		    		.executeAndFetch(Liste.class);
 		  }
+		}
 	}
 	
 	public  List<Liste> getListsByDescription(String description){
-		
-		if (verifCaract(description)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans description liste");
-		
+		if (description=="") return getAllLists();
+		else if (verifCaract(description)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans description liste");
+		else {
 		try (Connection con = sql2o.open()) {
 		    final String query =
 		        "SELECT * FROM LISTE WHERE DESCRIPTION = :description";
@@ -268,6 +284,7 @@ public class DaoBase {
 		    		.addParameter("description", description)
 		    		.executeAndFetch(Liste.class);
 		  }
+		}
 	}
 	
 	
@@ -350,10 +367,10 @@ public class DaoBase {
 		  }
 	}
 	
-	public static List<Element> getElementsByTitre(String titre){
-		if (verifCaract(titre)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre");
-		
-		
+	public  List<Element> getElementsByTitre(String titre){
+		if (titre=="") return getAllElements();
+		else if (verifCaract(titre)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans le titre");
+		else {
 		try (Connection con = sql2o.open()) {
 		    final String query =
 		        "SELECT * FROM ELEMENT WHERE TITRE = :titre";
@@ -362,29 +379,108 @@ public class DaoBase {
 		    		.addParameter("titre", titre)
 		    		.executeAndFetch(Element.class);
 		  }
+		}
 	}
 	
-	public static List<Element> getElementsByID(String Idelem){
-		if (verifCaract(Idelem)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans param");
+	public  List<Element> getElementsByDescription(String description){
+		if (description=="") return getAllElements();
+		else if (verifCaract(description)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans param");
+        else {
+        	try (Connection con = sql2o.open()) {
+                final String query =
+                    "SELECT * FROM ELEMENT WHERE DESCRIPTION = :description";
+
+                return con.createQuery(query)
+                        .addParameter("description", description)
+                        .executeAndFetch(Element.class);
+              }
+        }
+        
+    }
+	
+	public  List<Element> getElementsByID(String Idelem){
+		if (Idelem=="") return getAllElements();
+		else if (verifCaract(Idelem)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans param");
+		else {
+			try (Connection con = sql2o.open()) {
+			    final String query =
+			        "SELECT * FROM ELEMENT WHERE ID= :idelem";
+			    return con.createQuery(query)
+			    		.addParameter("idelem",Idelem)
+			    		.executeAndFetch(Element.class);
+			  }
+		}
 		
-		try (Connection con = sql2o.open()) {
-		    final String query =
-		        "SELECT * FROM ELEMENT WHERE ID= :idelem";
-		    return con.createQuery(query)
-		    		.addParameter("idelem",Idelem)
-		    		.executeAndFetch(Element.class);
-		  }
 	}
 
-	public static List<Liste> getListesByID(String Idliste){
-		if (verifCaract(Idliste)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans param");
-		try (Connection con = sql2o.open()) {
-		    final String query =
-		        "SELECT * FROM LISTE WHERE ID= :idliste";
-		    return con.createQuery(query)
-		    		.addParameter("idliste",Idliste)
-		    		.executeAndFetch(Liste.class);
-		  }
+	public  List<Liste> getListesByID(String Idliste){
+		if (Idliste=="") return getAllLists();
+		else if (verifCaract(Idliste)== false)  throw new IllegalArgumentException("caractère spéciale utilisé dans param");
+		else {
+			try (Connection con = sql2o.open()) {
+			    final String query =
+			        "SELECT * FROM LISTE WHERE ID= :idliste";
+			    return con.createQuery(query)
+			    		.addParameter("idliste",Idliste)
+			    		.executeAndFetch(Liste.class);
+			  }
+		}
+		
+	}
+	
+	public  List<Liste> SelectListe(List<Liste> titre,List<Liste> description, List<Liste> id ){
+		List<Liste> solution = new ArrayList<Liste>();
+		if (titre.size()==0  || description.size()==0 ||id.size()==0)  throw new IllegalArgumentException("problème paramètre champs");
+		
+		else if (id.size()==1) {
+			solution=id;
+			
+		}
+		else if (titre.size()==1) {
+			solution=titre;
+			
+		}
+		else if (description.size()==1) {
+			solution=description;
+			
+		}
+		else  {
+			for(int i = 0; i <titre.size(); i++)
+			{
+				for(int j = 0; j <description.size(); j++) {
+					if(titre.get(i).getId().equals(description.get(j).getId())) {
+					solution.add(titre.get(i));
+					}
+				}
+			}
+			
+		}
+		return solution;
+	}
+	
+	public  List<Element> SelectElement(List<Element> titre,List<Element> description, List<Element> id ){
+		List<Element> solution = new ArrayList<Element>();
+		if (titre.size()==0  || description.size()==0 ||id.size()==0)  throw new IllegalArgumentException("mauvais param");
+		else if (id.size()==1) {
+			solution=id;
+		}
+		else if (titre.size()==1) {
+			solution=titre;
+		}
+		else if (description.size()==1) {
+			solution=description;	
+		}
+		else  {
+			for(int i = 0; i <titre.size(); i++) {
+				for(int j = 0; j <description.size(); j++) {
+					if(titre.get(i).getId().equals(description.get(j).getId())) {
+					solution.add(titre.get(i));
+					}
+				}
+			}
+			
+		}
+		return solution;
 	}
 	
 }
