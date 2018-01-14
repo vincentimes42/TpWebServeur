@@ -529,4 +529,106 @@ public class TestDao{
 		assertEquals(2,resultat.size());
     }
     
+    
+    //test gestion paramètre "" pour les fonctions Get Attribut qui correspond à l'appelle des fonctions getAll
+    
+    @Test()
+    public void Test__GETALL_getElemByTitre(){
+    	dao.EffacerTout();
+    	Liste liste = new Liste();
+    	dao.insert(liste);
+    	Element elem = new Element();
+    	Element elem2 = new Element();
+		dao.insert(elem2,liste);
+		dao.insert(elem,liste);
+		List<Element> listetest  = dao.getElementsByTitre("");
+		List<Element> listtotale  =dao.getAllElements();
+		for(int i = 0; i <listtotale.size(); i++)
+			{ assertTrue(listtotale.get(i).getId().equals(listetest.get(i).getId())) ;
+			}
+    	}
+    
+    @Test()
+    public void Test__GETALL_getElemByDescrip(){
+    	dao.EffacerTout();
+    	Liste liste = new Liste();
+    	dao.insert(liste);
+    	Element elem = new Element();
+    	Element elem2 = new Element();
+		dao.insert(elem2,liste);
+		dao.insert(elem,liste);
+		List<Element> listetest  = dao.getElementsByDescription("");
+		List<Element> listtotale  =dao.getAllElements();
+		for(int i = 0; i <listtotale.size(); i++)
+			{ assertTrue(listtotale.get(i).getId().equals(listetest.get(i).getId())) ;
+			}
+	}
+    
+    
+    @Test()
+    public void Test__GETALL_getElemById(){
+    	dao.EffacerTout();
+    	Liste liste = new Liste();
+    	dao.insert(liste);
+    	Element elem = new Element();
+    	Element elem2 = new Element();
+		dao.insert(elem2,liste);
+		dao.insert(elem,liste);
+		List<Element> listetest  = dao.getElementsByID("");
+		List<Element> listtotale  =dao.getAllElements();
+		for(int i = 0; i <listtotale.size(); i++)
+			{ assertTrue(listtotale.get(i).getId().equals(listetest.get(i).getId())) ;
+			}
+		}
+    
+    
+    @Test()
+    public void Test__GETALL_getListeByTitre(){
+    	dao.EffacerTout();
+    	Liste liste1 = new Liste();
+    	Liste liste2 = new Liste();
+    	Liste liste3 = new Liste();
+    	dao.insert(liste1);
+    	dao.insert(liste2);
+    	dao.insert(liste3);
+		List<Liste> listetest  = dao.getListsByTitre("");
+		List<Liste> listtotale  =dao.getAllLists();
+		for(int i = 0; i <listtotale.size(); i++)
+			{ assertTrue(listtotale.get(i).getId().equals(listetest.get(i).getId())) ;
+			}
+    	}
+    @Test()
+    public void Test__GETALL_getListeByDescription(){
+    	dao.EffacerTout();
+    	Liste liste1 = new Liste();
+    	Liste liste2 = new Liste();
+    	Liste liste3 = new Liste();
+    	dao.insert(liste1);
+    	dao.insert(liste2);
+    	dao.insert(liste3);
+		List<Liste> listetest  = dao.getListsByDescription("");
+		List<Liste> listtotale  =dao.getAllLists();
+		for(int i = 0; i <listtotale.size(); i++)
+			{ assertTrue(listtotale.get(i).getId().equals(listetest.get(i).getId())) ;
+			}
+    	}
+    
+    @Test()
+    public void Test__GETALL_getListeByID(){
+    	dao.EffacerTout();
+    	Liste liste1 = new Liste();
+    	Liste liste2 = new Liste();
+    	Liste liste3 = new Liste();
+    	dao.insert(liste1);
+    	dao.insert(liste2);
+    	dao.insert(liste3);
+		List<Liste> listetest  = dao.getListesByID("");
+		List<Liste> listtotale  =dao.getAllLists();
+		for(int i = 0; i <listtotale.size(); i++)
+			{ assertTrue(listtotale.get(i).getId().equals(listetest.get(i).getId())) ;
+			}
+    	}
+	
 }
+    
+
