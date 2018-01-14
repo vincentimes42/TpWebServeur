@@ -1,4 +1,4 @@
-package projet;
+package projetJava;
 import static org.junit.Assert.*;
 
 import java.util.Date;
@@ -20,10 +20,10 @@ public class TestDao{
 		
 	}
 	*/
-	//test d'absence de caract spéciaux dans le tritre et la description des élément et  des listes afin des soucis lors du passsage en SQL
+	//test d'absence de caract spÃ©ciaux dans le tritre et la description des Ã©lÃ©ment et  des listes afin des soucis lors du passsage en SQL
 	
     @Test(expected = IllegalArgumentException.class)
-    public void Test__CaractSpe_insertListe() { // test caract spé
+    public void Test__CaractSpe_insertListe() { // test caract spÃ©
     	dao.EffacerTout();
     	Liste liste= new Liste();
     	liste.setTitre("a1~~~)]");
@@ -33,7 +33,7 @@ public class TestDao{
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void Test__CaractSpe_insertElem() { // test caract spé
+    public void Test__CaractSpe_insertElem() { // test caract spÃ©
     	dao.EffacerTout();
     	Liste liste= new Liste();
     	liste.setTitre("list");
@@ -46,7 +46,7 @@ public class TestDao{
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void Test__CaractSpe_modifElem() { // test caract spé
+    public void Test__CaractSpe_modifElem() { // test caract spÃ©
     	dao.EffacerTout();
     	Liste liste= new Liste();
     	liste.setTitre("list");
@@ -62,12 +62,12 @@ public class TestDao{
     }
     
     @Test(expected = IllegalArgumentException.class)
-    public void Test__CaractSpe_modif() { // test caract spé
+    public void Test__CaractSpe_modif() { // test caract spÃ©
     	dao.EffacerTout();
     	Liste liste= new Liste();
     	liste.setTitre("liste]");
     	Liste liste2= new Liste();
-    	liste2.setTitre("é~~~}]");
+    	liste2.setTitre("Ã©~~~}]");
 		dao.insert(liste);
 		dao.modif(liste.getId(),liste2);
     }
@@ -176,7 +176,7 @@ public class TestDao{
     }
     
     
-    // test pour vérifier que les fonctions avec  les listes et éléments fonctionnent  
+    // test pour vÃ©rifier que les fonctions avec  les listes et Ã©lÃ©ments fonctionnent  
     
     @Test()  
     public void Test__Vide_insertListe() { 
@@ -330,7 +330,7 @@ public class TestDao{
 		assertTrue(elem.getId().equals(dao.getElementsByID(elem.getId()).get(0).getId()));
     }
     
-    // tests pour vérifier le comportement des fonctions avec des listes contenats des listes et des éléments dans plusieurs listes
+    // tests pour vÃ©rifier le comportement des fonctions avec des listes contenats des listes et des Ã©lÃ©ments dans plusieurs listes
     
     
     @Test()  
@@ -340,26 +340,26 @@ public class TestDao{
     	Liste Sousliste= new Liste();
     	dao.insert(Surliste);
 		dao.insert(Sousliste,Surliste);
-		assertTrue(Sousliste.getId().equals(dao.getListPerList(Surliste).get(0).getId())); // on récupère la sous liste contenu dans la surliste
+		assertTrue(Sousliste.getId().equals(dao.getListPerList(Surliste).get(0).getId())); // on rÃ©cupÃ¨re la sous liste contenu dans la surliste
 		
     }
     @Test() 
-    public void Test__MultiListe_supprListe() {  //on vérifie la supréssion en cascade, en suprimant la surListe on supprime toutes les listes et les éléments 
-    	dao.EffacerTout();					//qui ne sont pas liés à d'autres listes ou éléments et on recommence le process pour les souslistes
+    public void Test__MultiListe_supprListe() {  //on vÃ©rifie la suprÃ©ssion en cascade, en suprimant la surListe on supprime toutes les listes et les Ã©lÃ©ments 
+    	dao.EffacerTout();					//qui ne sont pas liÃ©s Ã  d'autres listes ou Ã©lÃ©ments et on recommence le process pour les souslistes
     	Liste Surliste= new Liste();
     	Liste Sousliste= new Liste();
     	Element elem = new Element();
 		dao.insert(Surliste);
 		dao.insert(Sousliste,Surliste);
-		dao.insert(elem,Sousliste);				//ici on supprime Surlistes et ce quelle contient si ce n'est pas liés à autre chose, 
-		dao.supprimer(Surliste);				//si Surliste contient une SousListe la fonction est rappelée récursivement
+		dao.insert(elem,Sousliste);				//ici on supprime Surlistes et ce quelle contient si ce n'est pas liÃ©s Ã  autre chose, 
+		dao.supprimer(Surliste);				//si Surliste contient une SousListe la fonction est rappelÃ©e rÃ©cursivement
 		assertTrue(dao.getAllLists().size()==0);
 		assertTrue(dao.getAllElements().size()==0); 
 		
     }
     
     @Test
-    public void Test__ElementDansPlsListes_insertElem() { //on vérifie qu'un mêMe élément peux etre inséré dans plusieurs listes 
+    public void Test__ElementDansPlsListes_insertElem() { //on vÃ©rifie qu'un mÃªMe Ã©lÃ©ment peux etre insÃ©rÃ© dans plusieurs listes 
     	dao.EffacerTout();
     	Liste liste1= new Liste();
     	Liste liste2= new Liste();
@@ -384,13 +384,13 @@ public class TestDao{
 		dao.insert(elem,liste1);
 		dao.insert(elem,liste2);
 		dao.supprimer(elem,liste1);
-		assertTrue(elem.getId().equals(dao.getElementsPerList(liste2).get(0).getId())); // On test que on a supprimé l'élément de la liste 1 
-																						//mais comme il est aussi lié à la liste 2 il est conservé dans la table ELEMENT
+		assertTrue(elem.getId().equals(dao.getElementsPerList(liste2).get(0).getId())); // On test que on a supprimÃ© l'Ã©lÃ©ment de la liste 1 
+																						//mais comme il est aussi liÃ© Ã  la liste 2 il est conservÃ© dans la table ELEMENT
 		
     }
     
     @Test()
-    public void Test__ElementDansPlsListes_supprElement() {  //on test la supression d'un élément et de tous les liens
+    public void Test__ElementDansPlsListes_supprElement() {  //on test la supression d'un Ã©lÃ©ment et de tous les liens
     	dao.EffacerTout();
     	Liste liste1= new Liste();
     	Liste liste2= new Liste();
@@ -530,7 +530,7 @@ public class TestDao{
     }
     
     
-    //test gestion paramètre "" pour les fonctions Get Attribut qui correspond à l'appelle des fonctions getAll
+    //test gestion paramÃ¨tre "" pour les fonctions Get Attribut qui correspond Ã  l'appelle des fonctions getAll
     
     @Test()
     public void Test__GETALL_getElemByTitre(){
