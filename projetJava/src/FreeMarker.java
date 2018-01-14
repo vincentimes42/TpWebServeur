@@ -1,4 +1,4 @@
-package projetJava;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,12 +70,12 @@ public class FreeMarker {
 		liste.setTitre("liste courses");
 		liste.setDescrip("ceci est une liste de courses");
 		
-		dao.insertListe(liste);
-		dao.insertElement(elem,liste);
-		dao.insertElement(elem1,liste);
-		dao.insertElement(elem2,liste);
-		dao.insertElement(elem3,liste);
-		dao.insertElement(elem4,liste);
+		dao.insert(liste);
+		dao.insert(elem,liste);
+		dao.insert(elem1,liste);
+		dao.insert(elem2,liste);
+		dao.insert(elem3,liste);
+		dao.insert(elem4,liste);
 		
 		allElementListe();
 		elementDeListe(liste);
